@@ -1,0 +1,36 @@
+<div class="well" ng-controller="UsersController as UC">
+	<style type="text/css">
+		.girl, .boy {width: 200px;
+						height: 400px
+					}
+		.boy {float: right;
+		}
+		.serena {padding-left: 50px;
+					display: inline-block;
+					width: 201px;
+					height: 500px;
+					margin-left: 20%;
+					/*border: 1px solid red;*/
+					margin-right: 90px}
+		.ash {margin-right: 50px;
+				display: inline-block;
+				width: 201px;
+					height: 500px;
+					/*border: 1px solid red;*/
+					vertical-align: top}
+		button {text-align: center;}
+		h1 {text-align: center}
+	</style>
+
+	<h1 class="well">Are you a boy or a girl?</h1>
+	<div class="serena well">
+		<img class="girl" src="http://i.imgur.com/AwKniWm.png"><br><br><br>
+		<button ng-click="UC.gender('Female')" class="btn btn-danger">Girl</button>
+	</div>
+
+	<div class="ash well">
+		<img class="boy" src="http://www.laboratoriosace.com.br/sys/wp-content/uploads/2016/08/Ash_and_Pikachu_DP_art.png"><br><br><br><br><br><br>
+		<button ng-click="UC.gender('Male')" class="btn btn-primary">Boy</button>
+	
+	</div>
+</div>

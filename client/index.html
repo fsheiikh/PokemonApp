@@ -1,0 +1,183 @@
+<html ng-app="myApp">
+<head>
+	<title>MEAN Pokemon APP</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<style type="text/css">
+		body {background: "";
+			opacity: 0.8;
+    		filter: alpha(opacity=10);}
+	</style>
+	<script type="text/javascript">
+		var myApp = angular.module('myApp', ['ngRoute']);
+
+			myApp.config(function($routeProvider){
+				$routeProvider
+
+				.when('/teams', {
+					templateUrl: '/partials/teams.html'
+				})
+				.when('/dashboard', {
+					templateUrl: '/partials/dashboard.html'
+				})
+				.when('/login', {
+					templateUrl: '/partials/login.html'
+				})
+				.when('/user', {
+					templateUrl: '/partials/user.html'
+				})
+				.when('/gender', {
+					templateUrl: '/partials/gender.html'
+				})
+
+				.otherwise('/dashboard')
+
+			})
+
+			myApp.factory('UserFactory', function($http, $location){
+				var user = {};
+
+				user.create = function(input) {
+					$http.post('/users', input).success(function(data){
+						user.currentUser = data
+						if(data.gender == undefined){
+							$location.path('/gender');
+						}
+						else{
+							$location.path('/dashbaord');
+						}
+					})
+				}
+
+				user.update = function(id, gender) {
+					$http.put('/users/'+ id, gender).success(function(data){
+						console.log(data)
+						user.currentUser = data
+						$location.path('/dashboard');
+					})
+				}
+
+				return user;
+			})
+
+			myApp.factory('PokemonFactory', function($http, $location){
+				var pokemon = {};
+
+				pokemon.create = function(id, array, callback){
+					var pakage = {userID : id, pokemon: array}
+					// console.log(pakage);
+					$http.post('/teams', pakage).success(callback);
+
+				}
+
+				pokemon.index = function(callback){
+					$http.get('/teams').success(callback)
+				}
+
+
+
+				return pokemon;
+			})
+
+			myApp.controller('UsersController', function(UserFactory){
+				var self = this;
+				this.currentUser = UserFactory.currentUser;
+
+				this.create = function(input){
+					UserFactory.create(input)
+				}
+
+				this.gender = function(input){
+					var gender = {gender: input}
+					UserFactory.update(self.currentUser._id, gender)
+
+				}
+			})
+
+			myApp.controller('PokemonController', function(UserFactory, PokemonFactory, $location){
+				var self = this;
+				this.tempTeam = [];
+				this.count = 20;
+				this.errors;
+				this.allTeams;
+				this.fullTeam = [];
+				this.currentUser = UserFactory.currentUser;
+
+				this.reset = function(){
+					self.tempTeam = [];
+					self.count = 20;
+					self.errors = '';
+				}
+
+				this.team = function(number, cost) {
+					if(self.tempTeam[5]){
+						self.errors = 'Team is Full!'
+					}
+					else{
+						if(self.count >= cost){
+						self.tempTeam.push(number);
+						self.count -= cost;
+					}
+						else{
+							self.errors = 'You Cannot Afford this!'
+						}
+					}
+					
+					
+
+				}
+
+				this.create = function(array){
+					self.tempTeam = [];
+					PokemonFactory.create(self.currentUser._id, array, self.index)
+					$location.path('/teams');
+				}
+
+				this.index = function(){
+					PokemonFactory.index(function(data){
+						self.allTeams = data;
+						console.log(data)
+
+					});
+				}
+
+				this.index();
+
+			})
+
+
+
+
+
+
+	</script>
+
+</head>
+
+
+
+
+<body>
+	<div class="container well">
+		<a class="btn btn-success" href="#/teams">Teams</a>
+		<a class="btn btn-danger" href="#/user">User</a>
+		<a class="btn btn-info" href="#/dashboard">Dashboard</a>
+		<a class="btn btn-warning" href="#/login">Login</a>
+		<img src="/static/pokeapp/1.png">
+		<div ng-view>
+
+		</div>
+	</div>
+</body>
+</html>

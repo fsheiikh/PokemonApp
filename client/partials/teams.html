@@ -1,0 +1,32 @@
+<div class="well" ng-controller="PokemonController as PC">
+	<style type="text/css">
+		.inner2, .inner23 {height: 130px;
+      			width: 130px;
+      			border: 1px solid black;
+      			border-radius: 10px;
+      			vertical-align: top;
+      			display: inline-block;}
+      	.outer {margin: 10px;
+      				border: 1px solid red;}
+      	img.userhere {width: 30px;
+      					height: 45px;}
+	</style>
+
+	<div >
+		<h1>This is the Teams Page</h1>
+	</div>
+	<div class="outer" ng-repeat="each in PC.allTeams">
+		<div class="inner2">{{each._user.username}} <img class="userhere" src="{{each._user.image}}"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[1]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[0]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[1]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[2]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[3]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[4]}}.png"></div>
+		<div class="inner2"><img src="http://pokeapi.co/media/img/{{each.pokemon[5]}}.png"></div>
+	</div><br><br><br>
+
+
+
+
+</div>
